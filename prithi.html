@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0d0d0d">
+<title>Happy Birthday — Goon Squad 🎉</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ── TOKENS ── */
+  :root {
+    --bg:      #0d0d0d;
+    --surface: #161616;
+    --card:    #1c1c1c;
+    --orange:  #ff6b00;
+    --yellow:  #ffd000;
+    --white:   #f0ede8;
+    --muted:   #666;
+    --border:  #2a2a2a;
+    --pad:     clamp(18px, 5vw, 48px);
+  }
+
+  /* ── RESET ── */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { display: block; max-width: 100%; }
+  button { font-family: inherit; }
+
+  /* ── CUSTOM CURSOR (desktop only) ── */
+  @media (pointer: fine) {
+    body { cursor: none; }
+    .cursor {
+      width: 14px; height: 14px;
+      background: var(--orange);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.18s, height 0.18s, background 0.18s;
+      mix-blend-mode: exclusion;
+    }
+    .cursor.big { width: 46px; height: 46px; background: var(--yellow); }
+  }
+  @media (pointer: coarse) { .cursor { display: none; } }
+
+  /* ── NOISE OVERLAY ── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9000;
+  }
+
+  /* ══════════════════════════════
+     HERO
+  ══════════════════════════════ */
+  .hero {
+    min-height: 100svh;
+    position: relative;
+    overflow: hidden;
+    padding: clamp(70px, 12vw, 100px) var(--pad) clamp(90px, 14vw, 120px);
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 10% 50%, rgba(255,107,0,0.14), transparent),
+      radial-gradient(ellipse 50% 50% at 90% 15%, rgba(255,208,0,0.07), transparent);
+  }
+
+  .hero-giant {
+    position: absolute;
+    bottom: -20px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 14vw, 220px);
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,107,0,0.09);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 960px;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: clamp(0.6rem, 2.5vw, 0.72rem);
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: clamp(16px, 4vw, 24px);
+    opacity: 0;
+    animation: fadeUp 0.7s 0.2s forwards;
+  }
+  .hero-tag::before {
+    content: '';
+    width: clamp(18px, 4vw, 28px);
+    height: 2px;
+    background: var(--orange);
+    flex-shrink: 0;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4.2rem, 18vw, 13rem);
+    line-height: 0.88;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.35s forwards;
+  }
+  .line-white  { color: var(--white);  display: block; }
+  .line-orange { color: var(--orange); display: block; }
+  .line-yellow { color: var(--yellow); display: block; }
+
+  .hero-sub {
+    margin-top: clamp(18px, 4vw, 28px);
+    font-size: clamp(0.9rem, 3.2vw, 1.05rem);
+    color: var(--muted);
+    max-width: 500px;
+    line-height: 1.75;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.55s forwards;
+  }
+
+  .hero-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: clamp(20px, 5vw, 32px);
+    opacity: 0;
+    animation: fadeUp 0.8s 0.75s forwards;
+  }
+  .badge {
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: clamp(0.66rem, 2.5vw, 0.78rem);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: #888;
+    background: var(--surface);
+    white-space: nowrap;
+  }
+
+  /* scroll arrow — hidden on touch */
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px; right: var(--pad);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 1s 1.4s forwards;
+    z-index: 2;
+  }
+  .scroll-hint span {
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    color: var(--muted);
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+  }
+  .scroll-line {
+    width: 1px; height: 55px;
+    background: linear-gradient(to bottom, transparent, var(--orange));
+  }
+  @media (pointer: coarse) { .scroll-hint { display: none; } }
+
+  /* ══════════════════════════════
+     ROAST SECTION
+  ══════════════════════════════ */
+  .roast-section {
+    padding: clamp(60px, 12vw, 120px) var(--pad);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: clamp(36px, 7vw, 56px);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .section-eyebrow {
+    font-size: clamp(0.6rem, 2vw, 0.7rem);
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.6rem, 9vw, 5.5rem);
+    line-height: 0.95;
+  }
+  .section-count {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 9vw, 5rem);
+    color: var(--border);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  /* Mobile: single column → 2-col at 540px → 3-col at 900px */
+  .roast-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  @media (min-width: 540px)  { .roast-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 900px)  { .roast-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .roast-item {
+    background: var(--card);
+    padding: clamp(24px, 5vw, 36px) clamp(20px, 4vw, 28px);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.22s;
+    /* touch tap highlight */
+    -webkit-tap-highlight-color: transparent;
+  }
+  .roast-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--orange), var(--yellow));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  /* desktop hover */
+  @media (hover: hover) {
+    .roast-item:hover { background: #212121; }
+    .roast-item:hover::after { transform: scaleX(1); }
+    .roast-item:hover .roast-num { color: var(--orange); }
+  }
+  /* touch active */
+  .roast-item:active { background: #212121; }
+  .roast-item:active::after { transform: scaleX(1); }
+
+  .roast-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.4rem, 7vw, 3.5rem);
+    line-height: 1;
+    color: var(--border);
+    margin-bottom: 12px;
+    transition: color 0.22s;
+  }
+  .roast-emoji { font-size: clamp(1.5rem, 5vw, 1.8rem); margin-bottom: 10px; display: block; }
+  .roast-item p { font-size: clamp(0.85rem, 2.8vw, 0.93rem); color: #999; line-height: 1.72; }
+
+  /* ══════════════════════════════
+     MEMORIES
+  ══════════════════════════════ */
+  .memories-section {
+    background: var(--surface);
+    padding: clamp(60px, 12vw, 120px) var(--pad);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .memories-inner { max-width: 1100px; margin: 0 auto; }
+
+  /* mobile: 2-col equal grid, desktop: asymmetric */
+  .photo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: clamp(130px, 28vw, 200px);
+    gap: 8px;
+    margin-top: clamp(28px, 6vw, 50px);
+  }
+  @media (min-width: 700px) {
+    .photo-grid {
+      grid-template-columns: 1.5fr 1fr 1fr;
+      grid-template-rows: repeat(2, 200px);
+    }
+    .photo-slot:first-child { grid-row: 1 / 3; }
+  }
+
+  .photo-slot {
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+    transition: border-color 0.22s;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    cursor: zoom-in;
+  }
+  .photo-slot img,
+  .photo-slot video {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  @media (hover: hover) { .photo-slot:hover { border-color: var(--orange); } }
+  .photo-slot:active { border-color: var(--orange); }
+
+  .ph-icon  { font-size: 1.6rem; opacity: 0.22; position: relative; z-index: 1; }
+  .ph-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+    position: relative; z-index: 1;
+  }
+
+  /* tap cursor hint on slots */
+  .photo-slot { cursor: pointer; }
+
+  /* ══════════════════════════════
+     LIGHTBOX
+  ══════════════════════════════ */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 8000;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    touch-action: none;
+  }
+  .lightbox.open {
+    display: flex;
+    animation: lbFadeIn 0.25s ease forwards;
+  }
+  @keyframes lbFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .lb-inner {
+    position: relative;
+    max-width: min(92vw, 900px);
+    max-height: 90svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: lbZoomIn 0.28s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  }
+  @keyframes lbZoomIn {
+    from { opacity: 0; transform: scale(0.88); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .lb-inner img.lb-media-el,
+  .lb-inner video.lb-media-el {
+    display: block;
+    max-width: min(92vw, 900px);
+    max-height: 88svh;
+    width: auto;
+    height: auto;
+    border-radius: 12px;
+    object-fit: contain;
+    box-shadow: 0 30px 100px rgba(0,0,0,0.7);
+    animation: lbPop 0.28s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    cursor: default;
+  }
+  @keyframes lbPop {
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .lb-close {
+    position: fixed;
+    top: 16px; right: 18px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--white);
+    font-size: 1.3rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.18s;
+    z-index: 8100;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .lb-close:hover { background: rgba(255,107,0,0.3); transform: scale(1.1); }
+  .lb-close:active { transform: scale(0.93); }
+
+  /* prev / next arrows */
+  .lb-arrow {
+    position: fixed;
+    top: 50%; transform: translateY(-50%);
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--white);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.18s;
+    z-index: 8100;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .lb-arrow:hover  { background: rgba(255,107,0,0.3); }
+  .lb-arrow:active { background: rgba(255,107,0,0.5); }
+  .lb-prev { left: 10px; }
+  .lb-next { right: 10px; }
+
+  /* counter pill */
+  .lb-counter {
+    position: fixed;
+    bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.5);
+    background: rgba(0,0,0,0.5);
+    padding: 5px 14px;
+    border-radius: 100px;
+    z-index: 8100;
+  }
+
+  /* ══════════════════════════════
+     QUOTE
+  ══════════════════════════════ */
+  .quote-section {
+    padding: clamp(60px, 12vw, 110px) var(--pad);
+    max-width: 860px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .quote-mark {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 14vw, 7rem);
+    line-height: 0.5;
+    color: var(--orange);
+    opacity: 0.22;
+    margin-bottom: 8px;
+  }
+  .quote-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.6rem, 5.5vw, 3.6rem);
+    line-height: 1.18;
+  }
+  .quote-text .hl { color: var(--orange); }
+
+  /* ══════════════════════════════
+     CTA
+  ══════════════════════════════ */
+  .cta-section {
+    padding: clamp(30px, 6vw, 50px) var(--pad) clamp(60px, 12vw, 100px);
+    text-align: center;
+  }
+  .cta-label {
+    font-size: clamp(0.62rem, 2.2vw, 0.68rem);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .big-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: clamp(16px, 4vw, 20px) clamp(32px, 8vw, 50px);
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(0.85rem, 3vw, 0.95rem);
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 6px;
+    background: var(--orange);
+    color: #000;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    min-height: 52px; /* comfortable tap target */
+    width: clamp(220px, 80%, 360px);
+  }
+  @media (hover: hover) {
+    .big-btn:hover {
+      background: var(--yellow);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(255,107,0,0.3);
+    }
+  }
+  .big-btn:active { transform: scale(0.96); background: var(--yellow); }
+  .big-btn:disabled { opacity: 0.45; transform: none; }
+
+  /* ══════════════════════════════
+     SURPRISE / FINAL CARD
+  ══════════════════════════════ */
+  #surprise { display: none; padding: 0 var(--pad) clamp(80px, 16vw, 130px); }
+  #surprise.visible { display: block; animation: fadeUp 0.7s forwards; }
+
+  .final-card {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: clamp(32px, 8vw, 70px) clamp(22px, 6vw, 60px);
+    position: relative;
+    overflow: hidden;
+  }
+  .final-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--orange), var(--yellow), var(--orange));
+  }
+  .from-gang {
+    font-size: clamp(0.6rem, 2vw, 0.68rem);
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 18px;
+  }
+  .final-card h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.2rem, 7vw, 4.2rem);
+    line-height: 1;
+    margin-bottom: 26px;
+  }
+  .final-card p {
+    font-size: clamp(0.9rem, 2.8vw, 1.04rem);
+    color: #aaa;
+    line-height: 1.9;
+  }
+  .final-card p strong { color: var(--white); font-weight: 700; }
+  .final-card p em { font-style: italic; color: #c8c4be; }
+
+  .gang-sig {
+    margin-top: clamp(28px, 6vw, 48px);
+    padding-top: clamp(20px, 4vw, 30px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .sig-label {
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+    padding-top: 4px;
+    white-space: nowrap;
+  }
+  .gang-avatars { display: flex; gap: 8px; flex-wrap: wrap; }
+  .avatar-chip {
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    font-size: clamp(0.72rem, 2.5vw, 0.78rem);
+    font-weight: 700;
+    color: var(--white);
+    background: var(--surface);
+    white-space: nowrap;
+  }
+
+  /* ══════════════════════════════
+     LIGHTBOX
+  ══════════════════════════════ */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 8000;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    cursor: zoom-out;
+  }
+  .lightbox.open {
+    display: flex;
+    animation: lbFadeIn 0.25s ease forwards;
+  }
+  .lightbox-media {
+    max-width: min(92vw, 900px);
+    max-height: 88svh;
+    width: auto;
+    height: auto;
+    border-radius: 12px;
+    object-fit: contain;
+    box-shadow: 0 30px 100px rgba(0,0,0,0.7);
+    animation: lbPop 0.28s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    cursor: default;
+  }
+  .lightbox-close {
+    position: fixed;
+    top: 18px; right: 18px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--white);
+    font-size: 1.2rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 8001;
+  }
+  .lightbox-close:hover { background: rgba(255,107,0,0.35); transform: scale(1.1); }
+  .lightbox-close:active { transform: scale(0.92); }
+
+  /* nav arrows */
+  .lightbox-nav {
+    position: fixed;
+    top: 50%; transform: translateY(-50%);
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--white);
+    font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 8001;
+  }
+  .lightbox-nav:hover { background: rgba(255,107,0,0.3); }
+  .lightbox-nav:active { transform: translateY(-50%) scale(0.9); }
+  .lightbox-prev { left: 14px; }
+  .lightbox-next { right: 14px; }
+
+  /* counter pill */
+  .lightbox-counter {
+    position: fixed;
+    bottom: 22px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 6px 16px;
+    border-radius: 100px;
+    z-index: 8001;
+    pointer-events: none;
+  }
+
+  /* tap hint on photo slots */
+  .photo-slot::before {
+    content: '⤢';
+    position: absolute;
+    top: 8px; right: 10px;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.55);
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+  .photo-slot:hover::before,
+  .photo-slot:active::before { opacity: 1; }
+
+  @keyframes lbFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes lbPop {
+    from { opacity: 0; transform: scale(0.88); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  /* ══════════════════════════════
+     CONFETTI
+  ══════════════════════════════ */
+  .confetti-piece {
+    position: fixed;
+    top: -12px;
+    pointer-events: none;
+    animation: confettiFall linear forwards;
+    z-index: 500;
+    will-change: transform;
+  }
+
+  /* ══════════════════════════════
+     KEYFRAMES
+  ══════════════════════════════ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(26px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(105vh) rotate(600deg); opacity: 0; }
+  }
+
+  /* ══════════════════════════════
+     UTILITY: reduce motion
+  ══════════════════════════════ */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- cursor (desktop only via CSS pointer: fine) -->
+<div class="cursor" id="cursor"></div>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-giant">GOON SQUAD</div>
+  <div class="hero-content">
+    <p class="hero-tag">Goon Squad presents 💀🎉</p>
+    <h1>
+      <span class="line-white">Happy</span>
+      <span class="line-orange">Birth</span>
+      <span class="line-yellow">Day.</span>
+    </h1>
+    <p class="hero-sub">To the guy who knows everything happening in the world, has played every game ever made, and still somehow has the emotional range of a broken controller. We see you. We love you. Unfortunately. 🤝</p>
+    <div class="hero-badges">
+      <span class="badge">🎮 Pro Gamer (self-titled)</span>
+      <span class="badge">🌍 World's Unsolicited Newsreader</span>
+      <span class="badge">🧠 Slight Brain Rot</span>
+      <span class="badge">💢 Angers Easily</span>
+      <span class="badge">🗺️ Wants To Do Everything</span>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ══ ROAST ══ -->
+<section class="roast-section">
+  <div class="section-header">
+    <div>
+      <p class="section-eyebrow">A Goon Squad Official Report 😈</p>
+      <h2 class="section-title">THE<br>OFFICIAL<br>ROAST</h2>
+    </div>
+    <div class="section-count">05</div>
+  </div>
+  <div class="roast-grid">
+    <div class="roast-item">
+      <div class="roast-num">01</div>
+      <span class="roast-emoji">🎮</span>
+      <p><strong style="color:var(--white)">"Pro Gamer."</strong> Has played every game known to mankind. Rage quits at least twice per session. Blames the lag. Always. The controller has filed for protective custody.</p>
+    </div>
+    <div class="roast-item">
+      <div class="roast-num">02</div>
+      <span class="roast-emoji">🌍</span>
+      <p><strong style="color:var(--white)">Human breaking news alert.</strong> Will tell you about a war, a stock crash, and a celebrity scandal before you've had your morning coffee. Nobody asked. He doesn't care. The update is coming.</p>
+    </div>
+    <div class="roast-item">
+      <div class="roast-num">03</div>
+      <span class="roast-emoji">🧠</span>
+      <p><strong style="color:var(--white)">Brain: slightly corrupted.</strong> Knows the geopolitical situation of six countries but still laughs at the same meme for the fourth time. A walking paradox. Scientists are baffled.</p>
+    </div>
+    <div class="roast-item">
+      <div class="roast-num">04</div>
+      <span class="roast-emoji">💢</span>
+      <p><strong style="color:var(--white)">Gets pissed off for anything.</strong> Slow WiFi. Wrong food order. Someone breathing too loud. A pigeon looked at him weird. Threat level: always orange. We've adapted.</p>
+    </div>
+    <div class="roast-item">
+      <div class="roast-num">05</div>
+      <span class="roast-emoji">🗺️</span>
+      <p><strong style="color:var(--white)">"I want to try everything."</strong> Skydiving, exotic food, 3am road trips, questionable life choices — if it exists, he wants in. Zero hesitation. Maximum consequences. Somehow also our problem.</p>
+    </div>
+    <div class="roast-item" style="background:linear-gradient(135deg,#1c1c1c,#21210f); border:1px solid rgba(255,208,0,0.1);">
+      <div class="roast-num" style="color:rgba(255,208,0,0.18)">★</div>
+      <span class="roast-emoji">🏆</span>
+      <p style="color:#bbb"><strong style="color:var(--yellow)">In conclusion:</strong> A chaotic, rage-filled, news-broadcasting, game-losing, adventure-seeking menace. Wouldn't trade him for anything. (We tried. Nobody else will take him.)</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MEMORIES ══ -->
+<section class="memories-section">
+  <div class="memories-inner">
+    <p class="section-eyebrow">Goon Squad archives 📸</p>
+    <h2 class="section-title">MEMORIES<br><span style="color:var(--orange)">WE MADE</span></h2>
+    <div class="photo-grid" id="mediaGrid">
+      <!-- Slots are built by JS below — just set your filenames in the mediaFiles array -->
+    </div>
+  </div>
+</section>
+
+<!-- ══ QUOTE ══ -->
+<section class="quote-section">
+  <div class="quote-mark">"</div>
+  <p class="quote-text">
+    He'll rage at a game, lecture you about world news,
+    then suggest the most unhinged plan —
+    <span class="hl">and somehow it becomes the best memory you've ever made.</span>
+  </p>
+</section>
+
+<!-- ══ CTA ══ -->
+<section class="cta-section">
+  <p class="cta-label">⚠️ don't get pissed off — emotions ahead</p>
+  <button class="big-btn" id="surpriseBtn" onclick="showSurprise()">
+    <span>Click if you're brave</span>
+    <span style="font-size:1.25em; line-height:1">😤</span>
+  </button>
+</section>
+
+<!-- ══ SURPRISE ══ -->
+<section id="surprise">
+  <div class="final-card">
+    <p class="from-gang">Goon Squad — no cap, real talk 🤝</p>
+    <h2>Controller Down.<br>We Love You, Bro.</h2>
+    <p>
+      You're the guy who always wants us together. Every plan, every outing, every random 2am idea — it's always <strong>"bro come, it'll be fun, let's all go."</strong> And honestly? You're right. Every single time.<br><br>
+      You don't just want to experience things — you want <em>us</em> to experience them with you. The trips, the chaos, the stupid decisions — you always make sure the whole squad is there. That means more than you know.<br><br>
+      You treat the Goon Squad like family. And whether we say it or not — <strong>we do too.</strong> You're the glue holding this unhinged group of people together, and we'd be a lot more boring without you.<br><br>
+      Happy Birthday, man. <strong>Don't rage quit life. We need you here. 🔥</strong>
+    </p>
+    <div class="gang-sig">
+      <span class="sig-label">With love (and mild fear) —</span>
+      <div class="gang-avatars">
+        <span class="avatar-chip">🫂 Goon Squad</span>
+        <span class="avatar-chip">💀 Your Family</span>
+        <span class="avatar-chip">🔥 </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LIGHTBOX ══ -->
+<div class="lightbox" id="lightbox" onclick="lbClickOutside(event)">
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">✕</button>
+  <button class="lightbox-nav lightbox-prev" onclick="lbNav(-1)" aria-label="Previous">‹</button>
+  <div class="lb-inner" id="lbMediaWrap"></div>
+  <button class="lightbox-nav lightbox-next" onclick="lbNav(1)" aria-label="Next">›</button>
+  <div class="lightbox-counter" id="lbCounter">1 / 5</div>
+</div>
+
+<audio id="music" src="music.mp3" preload="auto"></audio>
+
+<script>
+  /* ══════════════════════════════
+     MEDIA GRID BUILDER
+     — Add your filenames here.
+     — Supports: .3gp .mp4 .mov .gif .jpg .jpeg .png .webp
+  ══════════════════════════════ */
+  const mediaFiles = [
+    'grp.jpeg',   // slot 1 — group photo (tall feature slot on desktop)
+    'v3.mp4',      // slot 2 — gif
+    'v4.mp4',      // slot 3 — gif
+    'v1.mp4', // slot 4 — replace with your filename
+    'v2.mp4', // slot 5 — replace with your filename
+  ];
+  // ↑ Replace any of the above with your actual filenames, e.g. 'memory1.3gp'
+
+  const placeholders = ['📸','🥳','🔥','😂',''];
+  const videoExts    = ['3gp','mp4','mov','webm','avi','mkv'];
+
+  const grid = document.getElementById('mediaGrid');
+
+  // Build grid slots
+  mediaFiles.forEach((file, i) => {
+    const slot = document.createElement('div');
+    slot.className = 'photo-slot';
+    slot.dataset.index = i;
+
+    const ext     = file.split('.').pop().toLowerCase();
+    const isVideo = videoExts.includes(ext);
+
+    // Placeholder icons (visible until media loads)
+    const ph = document.createElement('span');
+    ph.className = 'ph-icon';
+    ph.textContent = placeholders[i] || '🎬';
+    const lbl = document.createElement('span');
+    lbl.className = 'ph-label';
+    lbl.textContent = 'Memory ' + String(i + 1).padStart(2, '0');
+    slot.appendChild(ph);
+    slot.appendChild(lbl);
+
+    if (isVideo) {
+      const vid = document.createElement('video');
+      vid.src = file;
+      vid.autoplay = true; vid.loop = true;
+      vid.muted = true; vid.playsInline = true;
+      vid.setAttribute('playsinline', '');
+      vid.setAttribute('webkit-playsinline', '');
+      vid.style.cssText = 'opacity:0;transition:opacity 0.4s;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;';
+      vid.addEventListener('loadeddata', () => vid.style.opacity = '1');
+      vid.addEventListener('error', () => vid.remove());
+      slot.appendChild(vid);
+    } else {
+      const img = document.createElement('img');
+      img.src = file; img.alt = 'Memory ' + (i + 1);
+      img.style.cssText = 'opacity:0;transition:opacity 0.4s;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;';
+      img.addEventListener('load',  () => img.style.opacity = '1');
+      img.addEventListener('error', () => img.remove());
+      slot.appendChild(img);
+    }
+
+    // Open lightbox on click/tap
+    slot.addEventListener('click', () => openLightbox(i));
+    grid.appendChild(slot);
+  });
+
+  /* ══════════════════════════════
+     LIGHTBOX
+  ══════════════════════════════ */
+  let lbIndex = 0;
+
+  function openLightbox(index) {
+    lbIndex = index;
+    renderLightbox();
+    const lb = document.getElementById('lightbox');
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden'; // prevent scroll behind
+  }
+
+  function closeLightbox() {
+    const lb = document.getElementById('lightbox');
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+    // Stop any video playing inside lightbox
+    const oldVid = lb.querySelector('video');
+    if (oldVid) { oldVid.pause(); oldVid.remove(); }
+    const oldImg = lb.querySelector('.lb-media-el');
+    if (oldImg) oldImg.remove();
+  }
+
+  function lbNav(dir) {
+    lbIndex = (lbIndex + dir + mediaFiles.length) % mediaFiles.length;
+    renderLightbox();
+  }
+
+  function renderLightbox() {
+    const lb   = document.getElementById('lightbox');
+    const wrap = document.getElementById('lbMediaWrap');
+    const ctr  = document.getElementById('lbCounter');
+
+    // Clear previous media
+    wrap.innerHTML = '';
+
+    const file    = mediaFiles[lbIndex];
+    const ext     = file.split('.').pop().toLowerCase();
+    const isVideo = videoExts.includes(ext);
+
+    if (isVideo) {
+      const vid = document.createElement('video');
+      vid.src = file;
+      vid.autoplay = true; vid.loop = true;
+      vid.muted = false;   // sound ON in fullscreen view
+      vid.controls = true;
+      vid.playsInline = true;
+      vid.setAttribute('playsinline', '');
+      vid.className = 'lb-media-el';
+      wrap.appendChild(vid);
+    } else {
+      const img = document.createElement('img');
+      img.src = file;
+      img.alt = 'Memory ' + (lbIndex + 1);
+      img.className = 'lb-media-el';
+      wrap.appendChild(img);
+    }
+
+    ctr.textContent = (lbIndex + 1) + ' / ' + mediaFiles.length;
+  }
+
+  function lbClickOutside(e) {
+    if (e.target === document.getElementById('lightbox')) closeLightbox();
+  }
+
+  // Keyboard nav
+  document.addEventListener('keydown', e => {
+    const lb = document.getElementById('lightbox');
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'ArrowRight') lbNav(1);
+    if (e.key === 'ArrowLeft')  lbNav(-1);
+  });
+
+  // Swipe support for mobile
+  let tsX = 0;
+  document.getElementById('lightbox').addEventListener('touchstart', e => {
+    tsX = e.touches[0].clientX;
+  }, { passive: true });
+  document.getElementById('lightbox').addEventListener('touchend', e => {
+    const diff = tsX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) lbNav(diff > 0 ? 1 : -1);
+  }, { passive: true });
+
+  /* ── Desktop cursor ── */
+  const cursor = document.getElementById('cursor');
+  if (window.matchMedia('(pointer: fine)').matches) {
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+    });
+    document.querySelectorAll('.big-btn, .roast-item, .photo-slot').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+    });
+  }
+
+  /* ── Surprise reveal ── */
+  function showSurprise() {
+    const s   = document.getElementById('surprise');
+    const btn = document.getElementById('surpriseBtn');
+    s.classList.add('visible');
+    btn.innerHTML = '<span>Goon Squad loves you 🔥</span>';
+    btn.disabled = true;
+    setTimeout(() => s.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+    document.getElementById('music').play().catch(() => {});
+
+    const isMobile = window.innerWidth < 600;
+    const count    = isMobile ? 55 : 100;
+    const colors   = ['#ff6b00','#ffd000','#f0ede8','#ff9940','#ffffff','#ff4400'];
+    for (let i = 0; i < count; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.left   = Math.random() * 100 + 'vw';
+      const sz       = (isMobile ? 5 : 6) + Math.random() * 7 + 'px';
+      c.style.width  = sz; c.style.height = sz;
+      c.style.background   = colors[Math.floor(Math.random() * colors.length)];
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      c.style.animationDuration = (2.5 + Math.random() * 3.5) + 's';
+      c.style.animationDelay   = (Math.random() * 1.6) + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 7000);
+    }
+  }
+</script>
+</body>
+</html>
