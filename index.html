@@ -7,7 +7,6 @@
 <title>Happy Birthday — Goon Squad 🎉</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* ── TOKENS ── */
   :root {
     --bg:      #0d0d0d;
     --surface: #161616;
@@ -20,7 +19,6 @@
     --pad:     clamp(18px, 5vw, 48px);
   }
 
-  /* ── RESET ── */
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   body {
@@ -31,9 +29,8 @@
     -webkit-font-smoothing: antialiased;
   }
   img { display: block; max-width: 100%; }
-  button { font-family: inherit; }
+  button { font-family: inherit; cursor: pointer; }
 
-  /* ── CUSTOM CURSOR (desktop only) ── */
   @media (pointer: fine) {
     body { cursor: none; }
     .cursor {
@@ -51,7 +48,6 @@
   }
   @media (pointer: coarse) { .cursor { display: none; } }
 
-  /* ── NOISE OVERLAY ── */
   body::after {
     content: '';
     position: fixed; inset: 0;
@@ -60,9 +56,7 @@
     z-index: 9000;
   }
 
-  /* ══════════════════════════════
-     HERO
-  ══════════════════════════════ */
+  /* ══ HERO ══ */
   .hero {
     min-height: 100svh;
     position: relative;
@@ -132,37 +126,23 @@
   .line-orange { color: var(--orange); display: block; }
   .line-yellow { color: var(--yellow); display: block; }
 
-  .hero-sub {
+  /* teaser line — replaces description */
+  .hero-teaser {
     margin-top: clamp(18px, 4vw, 28px);
-    font-size: clamp(0.9rem, 3.2vw, 1.05rem);
+    font-size: clamp(0.95rem, 3.4vw, 1.15rem);
     color: var(--muted);
-    max-width: 500px;
-    line-height: 1.75;
+    max-width: 480px;
+    line-height: 1.8;
     opacity: 0;
     animation: fadeUp 0.8s 0.55s forwards;
+    font-style: italic;
+  }
+  .hero-teaser span {
+    color: var(--orange);
+    font-style: normal;
+    font-weight: 700;
   }
 
-  .hero-badges {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: clamp(20px, 5vw, 32px);
-    opacity: 0;
-    animation: fadeUp 0.8s 0.75s forwards;
-  }
-  .badge {
-    padding: 6px 14px;
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    font-size: clamp(0.66rem, 2.5vw, 0.78rem);
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    color: #888;
-    background: var(--surface);
-    white-space: nowrap;
-  }
-
-  /* scroll arrow — hidden on touch */
   .scroll-hint {
     position: absolute;
     bottom: 32px; right: var(--pad);
@@ -186,9 +166,7 @@
   }
   @media (pointer: coarse) { .scroll-hint { display: none; } }
 
-  /* ══════════════════════════════
-     ROAST SECTION
-  ══════════════════════════════ */
+  /* ══ ROAST ══ */
   .roast-section {
     padding: clamp(60px, 12vw, 120px) var(--pad);
     max-width: 1100px;
@@ -224,7 +202,6 @@
     flex-shrink: 0;
   }
 
-  /* Mobile: single column → 2-col at 540px → 3-col at 900px */
   .roast-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -239,7 +216,6 @@
     position: relative;
     overflow: hidden;
     transition: background 0.22s;
-    /* touch tap highlight */
     -webkit-tap-highlight-color: transparent;
   }
   .roast-item::after {
@@ -252,13 +228,11 @@
     transform-origin: left;
     transition: transform 0.3s;
   }
-  /* desktop hover */
   @media (hover: hover) {
     .roast-item:hover { background: #212121; }
     .roast-item:hover::after { transform: scaleX(1); }
     .roast-item:hover .roast-num { color: var(--orange); }
   }
-  /* touch active */
   .roast-item:active { background: #212121; }
   .roast-item:active::after { transform: scaleX(1); }
 
@@ -273,9 +247,7 @@
   .roast-emoji { font-size: clamp(1.5rem, 5vw, 1.8rem); margin-bottom: 10px; display: block; }
   .roast-item p { font-size: clamp(0.85rem, 2.8vw, 0.93rem); color: #999; line-height: 1.72; }
 
-  /* ══════════════════════════════
-     MEMORIES
-  ══════════════════════════════ */
+  /* ══ MEMORIES ══ */
   .memories-section {
     background: var(--surface);
     padding: clamp(60px, 12vw, 120px) var(--pad);
@@ -284,7 +256,6 @@
   }
   .memories-inner { max-width: 1100px; margin: 0 auto; }
 
-  /* mobile: 2-col equal grid, desktop: asymmetric */
   .photo-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -313,7 +284,7 @@
     transition: border-color 0.22s;
     -webkit-tap-highlight-color: transparent;
     position: relative;
-    cursor: zoom-in;
+    cursor: pointer;
   }
   .photo-slot img,
   .photo-slot video {
@@ -335,129 +306,21 @@
     position: relative; z-index: 1;
   }
 
-  /* tap cursor hint on slots */
-  .photo-slot { cursor: pointer; }
+  .photo-slot::before {
+    content: '⤢';
+    position: absolute;
+    top: 8px; right: 10px;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.55);
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+  .photo-slot:hover::before,
+  .photo-slot:active::before { opacity: 1; }
 
-  /* ══════════════════════════════
-     LIGHTBOX
-  ══════════════════════════════ */
-  .lightbox {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 8000;
-    background: rgba(0,0,0,0.92);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    touch-action: none;
-  }
-  .lightbox.open {
-    display: flex;
-    animation: lbFadeIn 0.25s ease forwards;
-  }
-  @keyframes lbFadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
-
-  .lb-inner {
-    position: relative;
-    max-width: min(92vw, 900px);
-    max-height: 90svh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: lbZoomIn 0.28s cubic-bezier(0.34,1.56,0.64,1) forwards;
-  }
-  @keyframes lbZoomIn {
-    from { opacity: 0; transform: scale(0.88); }
-    to   { opacity: 1; transform: scale(1); }
-  }
-
-  .lb-inner img.lb-media-el,
-  .lb-inner video.lb-media-el {
-    display: block;
-    max-width: min(92vw, 900px);
-    max-height: 88svh;
-    width: auto;
-    height: auto;
-    border-radius: 12px;
-    object-fit: contain;
-    box-shadow: 0 30px 100px rgba(0,0,0,0.7);
-    animation: lbPop 0.28s cubic-bezier(0.34,1.56,0.64,1) forwards;
-    cursor: default;
-  }
-  @keyframes lbPop {
-    from { opacity: 0; transform: scale(0.9); }
-    to   { opacity: 1; transform: scale(1); }
-  }
-
-  .lb-close {
-    position: fixed;
-    top: 16px; right: 18px;
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: var(--white);
-    font-size: 1.3rem;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.18s, transform 0.18s;
-    z-index: 8100;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .lb-close:hover { background: rgba(255,107,0,0.3); transform: scale(1.1); }
-  .lb-close:active { transform: scale(0.93); }
-
-  /* prev / next arrows */
-  .lb-arrow {
-    position: fixed;
-    top: 50%; transform: translateY(-50%);
-    width: 46px; height: 46px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.12);
-    color: var(--white);
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.18s;
-    z-index: 8100;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-  }
-  .lb-arrow:hover  { background: rgba(255,107,0,0.3); }
-  .lb-arrow:active { background: rgba(255,107,0,0.5); }
-  .lb-prev { left: 10px; }
-  .lb-next { right: 10px; }
-
-  /* counter pill */
-  .lb-counter {
-    position: fixed;
-    bottom: 20px; left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    color: rgba(255,255,255,0.5);
-    background: rgba(0,0,0,0.5);
-    padding: 5px 14px;
-    border-radius: 100px;
-    z-index: 8100;
-  }
-
-  /* ══════════════════════════════
-     QUOTE
-  ══════════════════════════════ */
+  /* ══ QUOTE ══ */
   .quote-section {
     padding: clamp(60px, 12vw, 110px) var(--pad);
     max-width: 860px;
@@ -479,12 +342,12 @@
   }
   .quote-text .hl { color: var(--orange); }
 
-  /* ══════════════════════════════
-     CTA
-  ══════════════════════════════ */
+  /* ══ CTA + OUTRO ZONE ══ */
   .cta-section {
     padding: clamp(30px, 6vw, 50px) var(--pad) clamp(60px, 12vw, 100px);
     text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
   }
   .cta-label {
     font-size: clamp(0.62rem, 2.2vw, 0.68rem);
@@ -512,7 +375,7 @@
     transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
-    min-height: 52px; /* comfortable tap target */
+    min-height: 52px;
     width: clamp(220px, 80%, 360px);
   }
   @media (hover: hover) {
@@ -523,12 +386,156 @@
     }
   }
   .big-btn:active { transform: scale(0.96); background: var(--yellow); }
-  .big-btn:disabled { opacity: 0.45; transform: none; }
+  .big-btn:disabled { opacity: 0.45; transform: none; cursor: default; }
 
-  /* ══════════════════════════════
-     SURPRISE / FINAL CARD
-  ══════════════════════════════ */
-  #surprise { display: none; padding: 0 var(--pad) clamp(80px, 16vw, 130px); }
+  /* ── Riddle box (hidden until btn clicked) ── */
+  #riddleZone {
+    display: none;
+    margin-top: clamp(32px, 6vw, 48px);
+    animation: fadeUp 0.6s forwards;
+  }
+  #riddleZone.visible { display: block; }
+
+  .riddle-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: clamp(28px, 6vw, 48px) clamp(22px, 5vw, 40px);
+    position: relative;
+    overflow: hidden;
+    text-align: left;
+  }
+  .riddle-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--yellow), var(--orange));
+  }
+
+  .riddle-eyebrow {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 14px;
+  }
+
+  .riddle-q {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.4rem, 5vw, 2.2rem);
+    line-height: 1.2;
+    color: var(--white);
+    margin-bottom: clamp(20px, 4vw, 28px);
+  }
+
+  .riddle-input-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .riddle-input {
+    flex: 1;
+    min-width: 180px;
+    padding: 14px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .riddle-input::placeholder { color: var(--muted); }
+  .riddle-input:focus { border-color: var(--orange); }
+  .riddle-input.wrong {
+    border-color: #ff3333;
+    animation: shake 0.35s ease;
+  }
+  .riddle-input.correct { border-color: #44dd88; }
+
+  .riddle-submit {
+    padding: 14px 26px;
+    background: var(--orange);
+    border: none;
+    border-radius: 6px;
+    color: #000;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+    min-height: 48px;
+  }
+  .riddle-submit:hover { background: var(--yellow); }
+  .riddle-submit:active { transform: scale(0.95); }
+
+  .riddle-hint {
+    margin-top: 10px;
+    font-size: 0.75rem;
+    color: #ff4444;
+    min-height: 18px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .riddle-hint.show { opacity: 1; }
+
+  /* ── Final reveal ── */
+  #finalReveal {
+    display: none;
+    margin-top: clamp(28px, 5vw, 40px);
+    animation: fadeUp 0.7s forwards;
+    text-align: center;
+  }
+  #finalReveal.visible { display: block; }
+
+  .reveal-text {
+    font-size: clamp(0.92rem, 3vw, 1.05rem);
+    color: #aaa;
+    line-height: 1.8;
+    margin-bottom: clamp(24px, 5vw, 36px);
+  }
+  .reveal-text strong { color: var(--white); }
+
+  .squad-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: clamp(16px, 4vw, 20px) clamp(32px, 8vw, 50px);
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(0.85rem, 3vw, 0.95rem);
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 2px solid var(--yellow);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--yellow);
+    transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+    min-height: 52px;
+    width: clamp(220px, 80%, 360px);
+  }
+  @media (hover: hover) {
+    .squad-btn:hover {
+      background: var(--yellow);
+      color: #000;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(255,208,0,0.25);
+    }
+  }
+  .squad-btn:active { transform: scale(0.96); }
+
+  /* ══ FINAL CARD (after squad btn) ══ */
+  #surprise { display: none; padding: 0 var(--pad) clamp(80px, 16vw, 130px); margin-top: clamp(40px, 8vw, 60px); }
   #surprise.visible { display: block; animation: fadeUp 0.7s forwards; }
 
   .final-card {
@@ -600,9 +607,7 @@
     white-space: nowrap;
   }
 
-  /* ══════════════════════════════
-     LIGHTBOX
-  ══════════════════════════════ */
+  /* ══ LIGHTBOX ══ */
   .lightbox {
     display: none;
     position: fixed;
@@ -631,6 +636,26 @@
     animation: lbPop 0.28s cubic-bezier(0.34,1.56,0.64,1) forwards;
     cursor: default;
   }
+  .lb-inner {
+    position: relative;
+    max-width: min(92vw, 900px);
+    max-height: 90svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lb-media-el {
+    display: block;
+    max-width: min(92vw, 900px);
+    max-height: 88svh;
+    width: auto;
+    height: auto;
+    border-radius: 12px;
+    object-fit: contain;
+    box-shadow: 0 30px 100px rgba(0,0,0,0.7);
+    animation: lbPop 0.28s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    cursor: default;
+  }
   .lightbox-close {
     position: fixed;
     top: 18px; right: 18px;
@@ -648,8 +673,6 @@
   }
   .lightbox-close:hover { background: rgba(255,107,0,0.35); transform: scale(1.1); }
   .lightbox-close:active { transform: scale(0.92); }
-
-  /* nav arrows */
   .lightbox-nav {
     position: fixed;
     top: 50%; transform: translateY(-50%);
@@ -669,8 +692,6 @@
   .lightbox-nav:active { transform: translateY(-50%) scale(0.9); }
   .lightbox-prev { left: 14px; }
   .lightbox-next { right: 14px; }
-
-  /* counter pill */
   .lightbox-counter {
     position: fixed;
     bottom: 22px; left: 50%;
@@ -688,33 +709,7 @@
     pointer-events: none;
   }
 
-  /* tap hint on photo slots */
-  .photo-slot::before {
-    content: '⤢';
-    position: absolute;
-    top: 8px; right: 10px;
-    font-size: 0.9rem;
-    color: rgba(255,255,255,0.55);
-    z-index: 2;
-    opacity: 0;
-    transition: opacity 0.2s;
-    pointer-events: none;
-  }
-  .photo-slot:hover::before,
-  .photo-slot:active::before { opacity: 1; }
-
-  @keyframes lbFadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
-  @keyframes lbPop {
-    from { opacity: 0; transform: scale(0.88); }
-    to   { opacity: 1; transform: scale(1); }
-  }
-
-  /* ══════════════════════════════
-     CONFETTI
-  ══════════════════════════════ */
+  /* ══ CONFETTI ══ */
   .confetti-piece {
     position: fixed;
     top: -12px;
@@ -724,9 +719,7 @@
     will-change: transform;
   }
 
-  /* ══════════════════════════════
-     KEYFRAMES
-  ══════════════════════════════ */
+  /* ══ KEYFRAMES ══ */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(26px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -735,10 +728,22 @@
     0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
     100% { transform: translateY(105vh) rotate(600deg); opacity: 0; }
   }
+  @keyframes lbFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes lbPop {
+    from { opacity: 0; transform: scale(0.88); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    22%  { transform: translateX(-8px); }
+    44%  { transform: translateX(8px); }
+    66%  { transform: translateX(-5px); }
+    88%  { transform: translateX(5px); }
+  }
 
-  /* ══════════════════════════════
-     UTILITY: reduce motion
-  ══════════════════════════════ */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   }
@@ -746,7 +751,6 @@
 </head>
 <body>
 
-<!-- cursor (desktop only via CSS pointer: fine) -->
 <div class="cursor" id="cursor"></div>
 
 <!-- ══ HERO ══ -->
@@ -760,14 +764,10 @@
       <span class="line-orange">Birth</span>
       <span class="line-yellow">Day.</span>
     </h1>
-    <p class="hero-sub">To the guy who knows everything happening in the world, has played every game ever made, and still somehow has the emotional range of a broken controller. We see you. We love you. Unfortunately. 🤝</p>
-    <div class="hero-badges">
-      <span class="badge">🎮 Pro Gamer (self-titled)</span>
-      <span class="badge">🌍 World's Unsolicited Newsreader</span>
-      <span class="badge">🧠 Slight Brain Rot</span>
-      <span class="badge">💢 Angers Easily</span>
-      <span class="badge">🗺️ Wants To Do Everything</span>
-    </div>
+    <p class="hero-teaser">
+      Something's been put together for you.<br>
+      Scroll down — <span>if you think you can handle it.</span>
+    </p>
   </div>
   <div class="scroll-hint">
     <div class="scroll-line"></div>
@@ -823,9 +823,7 @@
   <div class="memories-inner">
     <p class="section-eyebrow">Goon Squad archives 📸</p>
     <h2 class="section-title">MEMORIES<br><span style="color:var(--orange)">WE MADE</span></h2>
-    <div class="photo-grid" id="mediaGrid">
-      <!-- Slots are built by JS below — just set your filenames in the mediaFiles array -->
-    </div>
+    <div class="photo-grid" id="mediaGrid"></div>
   </div>
 </section>
 
@@ -839,16 +837,50 @@
   </p>
 </section>
 
-<!-- ══ CTA ══ -->
+<!-- ══ CTA + RIDDLE + FINAL ══ -->
 <section class="cta-section">
-  <p class="cta-label">⚠️ don't get pissed off — emotions ahead</p>
-  <button class="big-btn" id="surpriseBtn" onclick="showSurprise()">
+  <p class="cta-label">⚠️ don't get pissed off — there's more</p>
+  <button class="big-btn" id="surpriseBtn" onclick="revealRiddle()">
     <span>Click if you're brave</span>
     <span style="font-size:1.25em; line-height:1">😤</span>
   </button>
+
+  <!-- Riddle appears here, below the button -->
+  <div id="riddleZone">
+    <div class="riddle-card">
+      <p class="riddle-eyebrow">🔐 Prove you belong here</p>
+      <p class="riddle-q">I'm always there on every trip, every plan, every stupid idea you drag the squad into — but I have no weight, take no space, and you can never leave me behind. What am I?</p>
+      <div class="riddle-input-row">
+        <input
+          class="riddle-input"
+          id="riddleInput"
+          type="text"
+          placeholder="Type your answer..."
+          autocomplete="off"
+          autocorrect="off"
+          spellcheck="false"
+        />
+        <button class="riddle-submit" onclick="checkRiddle()">Submit</button>
+      </div>
+      <p class="riddle-hint" id="riddleHint">Not quite — think about what's always with the squad 👀</p>
+    </div>
+
+    <!-- Final reveal after correct answer -->
+    <div id="finalReveal">
+      <p class="reveal-text">
+        ✅ <strong>That's right.</strong><br><br>
+        The squad put something together for you.<br>
+        You'll know when you get there. Go see them.
+      </p>
+      <button class="squad-btn" onclick="showFinalCard()">
+        <span>Go find your squad</span>
+        <span style="font-size:1.25em">🔥</span>
+      </button>
+    </div>
+  </div>
 </section>
 
-<!-- ══ SURPRISE ══ -->
+<!-- ══ FINAL CARD ══ -->
 <section id="surprise">
   <div class="final-card">
     <p class="from-gang">Goon Squad — no cap, real talk 🤝</p>
@@ -864,7 +896,7 @@
       <div class="gang-avatars">
         <span class="avatar-chip">🫂 Goon Squad</span>
         <span class="avatar-chip">💀 Your Family</span>
-        <span class="avatar-chip">🔥 </span>
+        <span class="avatar-chip">🔥</span>
       </div>
     </div>
   </div>
@@ -882,26 +914,19 @@
 <audio id="music" src="music.mp3" preload="auto"></audio>
 
 <script>
-  /* ══════════════════════════════
-     MEDIA GRID BUILDER
-     — Add your filenames here.
-     — Supports: .3gp .mp4 .mov .gif .jpg .jpeg .png .webp
-  ══════════════════════════════ */
+  /* ══ MEDIA GRID ══ */
   const mediaFiles = [
-    'grp.jpeg',   // slot 1 — group photo (tall feature slot on desktop)
-    'v3.mp4',      // slot 2 — gif
-    'v4.mp4',      // slot 3 — gif
-    'v1.mp4', // slot 4 — replace with your filename
-    'v2.mp4', // slot 5 — replace with your filename
+    'grp.jpeg',
+    'v3.mp4',
+    'v4.mp4',
+    'v1.mp4',
+    'v2.mp4',
   ];
-  // ↑ Replace any of the above with your actual filenames, e.g. 'memory1.3gp'
 
   const placeholders = ['📸','🥳','🔥','😂',''];
   const videoExts    = ['3gp','mp4','mov','webm','avi','mkv'];
-
   const grid = document.getElementById('mediaGrid');
 
-  // Build grid slots
   mediaFiles.forEach((file, i) => {
     const slot = document.createElement('div');
     slot.className = 'photo-slot';
@@ -910,7 +935,6 @@
     const ext     = file.split('.').pop().toLowerCase();
     const isVideo = videoExts.includes(ext);
 
-    // Placeholder icons (visible until media loads)
     const ph = document.createElement('span');
     ph.className = 'ph-icon';
     ph.textContent = placeholders[i] || '🎬';
@@ -940,33 +964,103 @@
       slot.appendChild(img);
     }
 
-    // Open lightbox on click/tap
     slot.addEventListener('click', () => openLightbox(i));
     grid.appendChild(slot);
   });
 
-  /* ══════════════════════════════
-     LIGHTBOX
-  ══════════════════════════════ */
+  /* ══ RIDDLE LOGIC ══ */
+  // Accepted answers (case-insensitive, trimmed)
+  const acceptedAnswers = ['memories', 'memory', 'the memories', 'our memories', 'friendship', 'the squad', 'squad'];
+
+  function revealRiddle() {
+    const btn  = document.getElementById('surpriseBtn');
+    const zone = document.getElementById('riddleZone');
+    btn.innerHTML = '<span>Alright then... 👀</span>';
+    btn.disabled = true;
+    zone.classList.add('visible');
+    setTimeout(() => zone.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+  }
+
+  function checkRiddle() {
+    const input = document.getElementById('riddleInput');
+    const hint  = document.getElementById('riddleHint');
+    const val   = input.value.trim().toLowerCase();
+
+    if (!val) return;
+
+    if (acceptedAnswers.includes(val)) {
+      input.classList.remove('wrong');
+      input.classList.add('correct');
+      input.disabled = true;
+      document.querySelector('.riddle-submit').disabled = true;
+      hint.classList.remove('show');
+
+      const reveal = document.getElementById('finalReveal');
+      reveal.classList.add('visible');
+      setTimeout(() => reveal.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+    } else {
+      input.classList.remove('wrong');
+      void input.offsetWidth; // reflow to retrigger animation
+      input.classList.add('wrong');
+      hint.classList.add('show');
+      setTimeout(() => input.classList.remove('wrong'), 400);
+    }
+  }
+
+  // Submit on Enter key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.activeElement === document.getElementById('riddleInput')) {
+      checkRiddle();
+    }
+  });
+
+  function showFinalCard() {
+    const s = document.getElementById('surprise');
+    s.classList.add('visible');
+    document.querySelector('.squad-btn').innerHTML = '<span>Goon Squad loves you 🔥</span>';
+    document.querySelector('.squad-btn').disabled = true;
+    setTimeout(() => s.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+    document.getElementById('music').play().catch(() => {});
+    fireConfetti();
+  }
+
+  function fireConfetti() {
+    const isMobile = window.innerWidth < 600;
+    const count    = isMobile ? 55 : 100;
+    const colors   = ['#ff6b00','#ffd000','#f0ede8','#ff9940','#ffffff','#ff4400'];
+    for (let i = 0; i < count; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.left   = Math.random() * 100 + 'vw';
+      const sz       = (isMobile ? 5 : 6) + Math.random() * 7 + 'px';
+      c.style.width  = sz; c.style.height = sz;
+      c.style.background   = colors[Math.floor(Math.random() * colors.length)];
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      c.style.animationDuration = (2.5 + Math.random() * 3.5) + 's';
+      c.style.animationDelay   = (Math.random() * 1.6) + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 7000);
+    }
+  }
+
+  /* ══ LIGHTBOX ══ */
   let lbIndex = 0;
 
   function openLightbox(index) {
     lbIndex = index;
     renderLightbox();
-    const lb = document.getElementById('lightbox');
-    lb.classList.add('open');
-    document.body.style.overflow = 'hidden'; // prevent scroll behind
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
   }
 
   function closeLightbox() {
     const lb = document.getElementById('lightbox');
     lb.classList.remove('open');
     document.body.style.overflow = '';
-    // Stop any video playing inside lightbox
-    const oldVid = lb.querySelector('video');
-    if (oldVid) { oldVid.pause(); oldVid.remove(); }
-    const oldImg = lb.querySelector('.lb-media-el');
-    if (oldImg) oldImg.remove();
+    const wrap = document.getElementById('lbMediaWrap');
+    const vid  = wrap.querySelector('video');
+    if (vid) { vid.pause(); }
+    wrap.innerHTML = '';
   }
 
   function lbNav(dir) {
@@ -975,11 +1069,8 @@
   }
 
   function renderLightbox() {
-    const lb   = document.getElementById('lightbox');
     const wrap = document.getElementById('lbMediaWrap');
     const ctr  = document.getElementById('lbCounter');
-
-    // Clear previous media
     wrap.innerHTML = '';
 
     const file    = mediaFiles[lbIndex];
@@ -990,8 +1081,7 @@
       const vid = document.createElement('video');
       vid.src = file;
       vid.autoplay = true; vid.loop = true;
-      vid.muted = false;   // sound ON in fullscreen view
-      vid.controls = true;
+      vid.muted = false; vid.controls = true;
       vid.playsInline = true;
       vid.setAttribute('playsinline', '');
       vid.className = 'lb-media-el';
@@ -1011,7 +1101,6 @@
     if (e.target === document.getElementById('lightbox')) closeLightbox();
   }
 
-  // Keyboard nav
   document.addEventListener('keydown', e => {
     const lb = document.getElementById('lightbox');
     if (!lb.classList.contains('open')) return;
@@ -1020,7 +1109,6 @@
     if (e.key === 'ArrowLeft')  lbNav(-1);
   });
 
-  // Swipe support for mobile
   let tsX = 0;
   document.getElementById('lightbox').addEventListener('touchstart', e => {
     tsX = e.touches[0].clientX;
@@ -1030,45 +1118,17 @@
     if (Math.abs(diff) > 50) lbNav(diff > 0 ? 1 : -1);
   }, { passive: true });
 
-  /* ── Desktop cursor ── */
+  /* ══ DESKTOP CURSOR ══ */
   const cursor = document.getElementById('cursor');
   if (window.matchMedia('(pointer: fine)').matches) {
     document.addEventListener('mousemove', e => {
       cursor.style.left = e.clientX + 'px';
       cursor.style.top  = e.clientY + 'px';
     });
-    document.querySelectorAll('.big-btn, .roast-item, .photo-slot').forEach(el => {
+    document.querySelectorAll('.big-btn, .squad-btn, .roast-item, .photo-slot').forEach(el => {
       el.addEventListener('mouseenter', () => cursor.classList.add('big'));
       el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
     });
-  }
-
-  /* ── Surprise reveal ── */
-  function showSurprise() {
-    const s   = document.getElementById('surprise');
-    const btn = document.getElementById('surpriseBtn');
-    s.classList.add('visible');
-    btn.innerHTML = '<span>Goon Squad loves you 🔥</span>';
-    btn.disabled = true;
-    setTimeout(() => s.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
-    document.getElementById('music').play().catch(() => {});
-
-    const isMobile = window.innerWidth < 600;
-    const count    = isMobile ? 55 : 100;
-    const colors   = ['#ff6b00','#ffd000','#f0ede8','#ff9940','#ffffff','#ff4400'];
-    for (let i = 0; i < count; i++) {
-      const c = document.createElement('div');
-      c.className = 'confetti-piece';
-      c.style.left   = Math.random() * 100 + 'vw';
-      const sz       = (isMobile ? 5 : 6) + Math.random() * 7 + 'px';
-      c.style.width  = sz; c.style.height = sz;
-      c.style.background   = colors[Math.floor(Math.random() * colors.length)];
-      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-      c.style.animationDuration = (2.5 + Math.random() * 3.5) + 's';
-      c.style.animationDelay   = (Math.random() * 1.6) + 's';
-      document.body.appendChild(c);
-      setTimeout(() => c.remove(), 7000);
-    }
   }
 </script>
 </body>
